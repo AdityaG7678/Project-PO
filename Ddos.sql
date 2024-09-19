@@ -1,4 +1,3 @@
--- Active: 1726524723331@@127.0.0.1@3306
 
 -- Create Attack_Detection Database
 CREATE DATABASE Attack_Detection;
