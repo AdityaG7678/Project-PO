@@ -420,3 +420,38 @@ INSERT INTO incident_responses (response_date, strategy_id, response_details) VA
 ('2022-01-04 17:00:00', 4, 'Null routing diverted attack traffic'),
 ('2022-01-05 18:00:00', 5, 'Sinkhole redirected malicious domains');
 
+SELECT a.*, at.type_name, s.source_country 
+FROM attacks a 
+JOIN attack_types at ON a.attack_type = at.type_id  
+JOIN sources s ON a.source_ip = s.source_ip;
+
+-- Retrieve all detection rules with corresponding attack type
+
+SELECT dr.*, at.type_name
+FROM detection_rules dr
+JOIN attack_types at 
+ON dr.rule_description LIKE CONCAT('%', at.type_name, '%');
+
+-- Retrieve all alerts with corresponding attack information and alert level
+
+
+SELECT al.*, a.attack_date, a.attack_type, at.type_name
+FROM alerts al
+JOIN attacks a ON al.attack_id = a.attack_id  
+JOIN attack_types at ON a.attack_type = at.type_id; 
+
+-- Retrieve all sources with corresponding attack and alert information
+
+
+SELECT s.*, a.attack_date, al.alert_date, al.alert_level
+FROM sources s
+JOIN attacks a ON s.source_ip = a.source_ip
+JOIN alerts al ON a.attack_id = al.attack_id;  
+
+-- Retrieve all attack types with corresponding detection rules and attacks
+
+
+SELECT at.*, dr.rule_name, a.attack_date
+FROM attack_types at
+JOIN detection_rules dr ON at.type_id = dr.type_id  
+JOIN attacks a ON a.attack_type = at.type_id;  
